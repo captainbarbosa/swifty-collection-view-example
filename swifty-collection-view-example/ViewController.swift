@@ -27,7 +27,7 @@ class ViewController: UIViewController {
 
         collectionView.dataSource = self
         collectionView.delegate = self
-        // Register the custom cell class we're going to use
+        // Register the custom cell class to use
         collectionView.register(CustomCollectionViewCell.self, forCellWithReuseIdentifier: "reusableCell")
         view.addSubview(collectionView)
 
@@ -52,7 +52,6 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate {
          when we retrieve it from the reuse queue or when we create a new one.
          */
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "reusableCell", for: indexPath) as! CustomCollectionViewCell
-        cell.contentView.backgroundColor = UIColor.purple.withAlphaComponent(0.3)
         cell.numberValue = values[indexPath.row]
 
         return cell
@@ -63,15 +62,15 @@ class CustomCollectionViewCell: UICollectionViewCell {
 
     var numberView: UILabel!
 
-    var numberValue: Int {
+    var numberValue: Int? {
         didSet {
             updateSubviews()
         }
     }
 
     override init(frame: CGRect) {
-        self.numberValue = 0
         super.init(frame: frame)
+        self.contentView.backgroundColor = UIColor.purple.withAlphaComponent(0.3)
     }
 
     required init?(coder: NSCoder) {
@@ -96,11 +95,19 @@ class CustomCollectionViewCell: UICollectionViewCell {
     }
 
     private func configureLabel() {
+        // Skip everything below if self.numberValue is nil
+        guard let numberValue = self.numberValue else { return }
+
+        // Setup label & constraints
         numberView = UILabel(frame: CGRect.zero)
         numberView.translatesAutoresizingMaskIntoConstraints = false
         numberView.font = UIFont.systemFont(ofSize: 24.0, weight: .bold)
-        numberView.text = "\(self.numberValue)"
+        numberView.text = "\(numberValue)"
 
+        /**
+         Always add custom content to a `UICollectionViewCell`'s `contentView`,
+         not the actual `UICollectionViewCell` itself.
+         */
         self.contentView.addSubview(numberView)
 
         NSLayoutConstraint.activate([
