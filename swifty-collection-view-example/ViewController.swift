@@ -92,6 +92,10 @@ class CustomCollectionViewCell: UICollectionViewCell {
             self.numberView.removeFromSuperview()
         }
 
+        configureLabel()
+    }
+
+    private func configureLabel() {
         numberView = UILabel(frame: CGRect.zero)
         numberView.translatesAutoresizingMaskIntoConstraints = false
         numberView.font = UIFont.systemFont(ofSize: 24.0, weight: .bold)
@@ -105,4 +109,3 @@ class CustomCollectionViewCell: UICollectionViewCell {
         ])
     }
 }
-
